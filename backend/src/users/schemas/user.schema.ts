@@ -21,10 +21,22 @@ export class User {
   phone: string;
 
   @Prop({ required: true })
-  metier: string;
+  isArtisan: boolean;
+
+  @Prop()
+  metier?: string;
 
   @Prop([String])
-  skills: string[];
+  competences?: string[];
+
+  @Prop()
+  localisation?: string;
+
+  @Prop({ default: 0 })
+  note?: number;
+
+  @Prop({ default: 0 })
+  projetsRealises?: number;
 
   @Prop({ default: Date.now })
   createdAt: Date;

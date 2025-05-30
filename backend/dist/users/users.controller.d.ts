@@ -12,8 +12,12 @@ export declare class UsersController {
             lastName: string;
             email: string;
             phone: string;
-            metier: string;
-            skills: string[];
+            isArtisan: boolean;
+            metier?: string;
+            competences?: string[];
+            localisation?: string;
+            note?: number;
+            projetsRealises?: number;
             createdAt: Date;
             toObject: (() => any) & {
                 (options: import("mongoose").ToObjectOptions & {

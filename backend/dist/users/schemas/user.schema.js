@@ -17,8 +17,12 @@ let User = class User {
     email;
     password;
     phone;
+    isArtisan;
     metier;
-    skills;
+    competences;
+    localisation;
+    note;
+    projetsRealises;
     createdAt;
     toObject() {
         const obj = this.toObject();
@@ -49,12 +53,28 @@ __decorate([
 ], User.prototype, "phone", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isArtisan", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], User.prototype, "metier", void 0);
 __decorate([
     (0, mongoose_1.Prop)([String]),
     __metadata("design:type", Array)
-], User.prototype, "skills", void 0);
+], User.prototype, "competences", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "localisation", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: 0 }),
+    __metadata("design:type", Number)
+], User.prototype, "note", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: 0 }),
+    __metadata("design:type", Number)
+], User.prototype, "projetsRealises", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: Date.now }),
     __metadata("design:type", Date)

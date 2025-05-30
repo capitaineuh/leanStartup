@@ -15,6 +15,7 @@ const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const auth_module_1 = require("./auth/auth.module");
 const tenders_module_1 = require("./tenders/tenders.module");
+const artisans_module_1 = require("./artisans/artisans.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -28,6 +29,7 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             tenders_module_1.TendersModule,
+            artisans_module_1.ArtisansModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

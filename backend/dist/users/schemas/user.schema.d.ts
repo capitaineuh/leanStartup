@@ -6,8 +6,12 @@ export declare class User {
     email: string;
     password: string;
     phone: string;
-    metier: string;
-    skills: string[];
+    isArtisan: boolean;
+    metier?: string;
+    competences?: string[];
+    localisation?: string;
+    note?: number;
+    projetsRealises?: number;
     createdAt: Date;
     toObject(): any;
 }

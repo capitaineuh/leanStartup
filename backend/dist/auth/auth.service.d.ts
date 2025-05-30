@@ -1,9 +1,13 @@
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { RegisterDto } from '../users/dto/register.dto';
+import { User } from '../users/schemas/user.schema';
+import { Model } from 'mongoose';
 export declare class AuthService {
     private usersService;
     private jwtService;
-    constructor(usersService: UsersService, jwtService: JwtService);
+    private userModel;
+    constructor(usersService: UsersService, jwtService: JwtService, userModel: Model<User>);
     validateUser(email: string, password: string): Promise<any>;
     login(user: any): Promise<{
         access_token: string;
@@ -12,6 +16,11 @@ export declare class AuthService {
             email: any;
             firstName: any;
             lastName: any;
+            isArtisan: any;
         };
+    }>;
+    register(registerDto: RegisterDto): Promise<{
+        user: User;
+        isArtisan: boolean;
     }>;
 }
