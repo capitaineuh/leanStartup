@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 
 // Configuration d'axios
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
