@@ -1,35 +1,43 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   try {
-    console.log('Starting NestJS application...');
-    const app = await NestFactory.create(AppModule);
+    const logger = new Logger('Bootstrap');
+    logger.log('Starting NestJS application...');
+    
+    const app = await NestFactory.create(AppModule, {
+      logger: ['error', 'warn', 'debug', 'log', 'verbose'],
+    });
     
     // Configuration CORS
+    const corsOrigins = process.env.CORS_ORIGIN 
+      ? process.env.CORS_ORIGIN.split(',') 
+      : ['http://localhost:3000'];
+    
     app.enableCors({
-      origin: 'http://localhost:3000',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      origin: corsOrigins,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
+      allowedHeaders: 'Content-Type, Accept, Authorization',
     });
 
     // Ajout du préfixe global pour l'API
     app.setGlobalPrefix('api');
 
-    // Log des requêtes
-    app.use((req, res, next) => {
-      console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-      next();
-    });
+    // Log des requêtes en production
+    if (process.env.NODE_ENV === 'production') {
+      app.use((req, res, next) => {
+        logger.debug(`${req.method} ${req.url}`);
+        next();
+      });
+    }
 
-    const port = 3001;
+    const port = process.env.PORT || 3001;
     await app.listen(port);
-    console.log(`✅ Backend is running on: http://localhost:${port}/api`);
-    console.log('📝 Available endpoints:');
-    console.log('  - POST /api/users (Register)');
-    console.log('  - POST /api/auth/login (Login)');
-    console.log('  - POST /api/tenders (Create Tender)');
-    console.log('  - GET /api/tenders (List Tenders)');
+    logger.log(`✅ Backend is running on: http://localhost:${port}/api`);
+    logger.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   } catch (error) {
     console.error('❌ Error starting the application:', error);
     process.exit(1);

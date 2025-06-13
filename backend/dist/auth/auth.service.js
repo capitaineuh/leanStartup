@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var AuthService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -20,10 +21,11 @@ const bcrypt = require("bcrypt");
 const user_schema_1 = require("../users/schemas/user.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-let AuthService = class AuthService {
+let AuthService = AuthService_1 = class AuthService {
     usersService;
     jwtService;
     userModel;
+    logger = new common_1.Logger(AuthService_1.name);
     constructor(usersService, jwtService, userModel) {
         this.usersService = usersService;
         this.jwtService = jwtService;
@@ -51,31 +53,43 @@ let AuthService = class AuthService {
         };
     }
     async register(registerDto) {
-        const { email, password, firstName, lastName, phone, isArtisan, metier, localisation } = registerDto;
-        const existingUser = await this.userModel.findOne({ email });
-        if (existingUser) {
-            throw new common_1.ConflictException('Cet email est déjà utilisé');
+        try {
+            this.logger.debug(`Tentative d'inscription pour l'email: ${registerDto.email}`);
+            const { email, password, firstName, lastName, phone, isArtisan, metier, localisation } = registerDto;
+            const existingUser = await this.userModel.findOne({ email });
+            if (existingUser) {
+                this.logger.warn(`Email déjà utilisé: ${email}`);
+                throw new common_1.ConflictException('Cet email est déjà utilisé');
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const user = new this.userModel({
+                email,
+                password: hashedPassword,
+                firstName,
+                lastName,
+                phone,
+                isArtisan,
+                metier: isArtisan ? metier : undefined,
+                localisation,
+                competences: [],
+                note: 0,
+                projetsRealises: 0
+            });
+            this.logger.debug('Sauvegarde du nouvel utilisateur...');
+            const savedUser = await user.save();
+            this.logger.debug(`Utilisateur créé avec succès: ${savedUser._id}`);
+            const verifyUser = await this.userModel.findById(savedUser._id);
+            this.logger.debug(`Vérification de l'utilisateur dans la base: ${verifyUser ? 'OK' : 'Non trouvé'}`);
+            return { user: savedUser, isArtisan };
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new this.userModel({
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName,
-            phone,
-            isArtisan,
-            metier: isArtisan ? metier : undefined,
-            localisation,
-            competences: [],
-            note: 0,
-            projetsRealises: 0
-        });
-        const savedUser = await user.save();
-        return { user: savedUser, isArtisan };
+        catch (error) {
+            this.logger.error(`Erreur lors de l'inscription: ${error.message}`, error.stack);
+            throw error;
+        }
     }
 };
 exports.AuthService = AuthService;
-exports.AuthService = AuthService = __decorate([
+exports.AuthService = AuthService = AuthService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(2, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [users_service_1.UsersService,

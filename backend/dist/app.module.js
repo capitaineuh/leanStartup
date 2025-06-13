@@ -25,7 +25,20 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
-            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/leanstartup'),
+            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/leanstartup', {
+                connectionFactory: (connection) => {
+                    connection.on('connected', () => {
+                        console.log('✅ MongoDB is connected');
+                    });
+                    connection.on('error', (error) => {
+                        console.error('❌ MongoDB connection error:', error);
+                    });
+                    connection.on('disconnected', () => {
+                        console.log('⚠️ MongoDB is disconnected');
+                    });
+                    return connection;
+                },
+            }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             tenders_module_1.TendersModule,

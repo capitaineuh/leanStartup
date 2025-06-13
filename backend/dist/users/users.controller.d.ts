@@ -11,7 +11,7 @@ export declare class UsersController {
             firstName: string;
             lastName: string;
             email: string;
-            phone: string;
+            phone?: string;
             isArtisan: boolean;
             metier?: string;
             competences?: string[];

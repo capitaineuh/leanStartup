@@ -5,7 +5,7 @@ export declare class User {
     lastName: string;
     email: string;
     password: string;
-    phone: string;
+    phone?: string;
     isArtisan: boolean;
     metier?: string;
     competences?: string[];

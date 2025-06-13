@@ -2,6 +2,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from '../users/dto/register.dto';
 export declare class AuthController {
     private authService;
+    private readonly logger;
     constructor(authService: AuthService);
     register(registerDto: RegisterDto): Promise<{
         isArtisan: boolean;
