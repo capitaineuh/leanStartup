@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
-
+//ceci est le main.ts
 async function bootstrap() {
   try {
     const logger = new Logger('Bootstrap');
