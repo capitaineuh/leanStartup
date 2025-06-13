@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
 // Configuration d'axios
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -24,31 +24,35 @@ export interface LoginData {
   password: string;
 }
 
+export interface LoginResponse {
+  token: string;
+}
+
 class AuthService {
   async register(data: RegisterData): Promise<RegisterResponse> {
     try {
       const response = await axios.post<RegisterResponse>(`${API_URL}/auth/register`, data);
       return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || 'Une erreur est survenue lors de l\'inscription');
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
       }
-      throw error;
+      throw new Error('Une erreur est survenue lors de l\'inscription');
     }
   }
 
-  async login(data: LoginData) {
+  async login(data: LoginData): Promise<LoginResponse> {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, data);
+      const response = await axios.post<LoginResponse>(`${API_URL}/auth/login`, data);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
       return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || 'Email ou mot de passe incorrect');
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
       }
-      throw error;
+      throw new Error('Email ou mot de passe incorrect');
     }
   }
 
