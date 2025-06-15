@@ -18,10 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-gray-50`}>
         <AuthProvider>
           <Navbar />
-          <main className="min-h-screen bg-gray-50">
+          <main>
             {children}
           </main>
         </AuthProvider>
