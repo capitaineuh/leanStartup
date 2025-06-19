@@ -12,15 +12,12 @@ async function bootstrap() {
     });
     
     // Configuration CORS
-    const corsOrigins = process.env.CORS_ORIGIN 
-      ? process.env.CORS_ORIGIN.split(',') 
-      : ['http://localhost:3000'];
-    
     app.enableCors({
-      origin: corsOrigins,
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      credentials: true,
-      allowedHeaders: 'Content-Type, Accept, Authorization',
+      origin: [
+        'https://lean-startup-jet.vercel.app', // ton frontend Vercel
+        'http://localhost:3000',               // pour le dev local
+      ],
+      credentials: true, // si tu utilises des cookies ou l'authentification
     });
 
     // Ajout du préfixe global pour l'API
